@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022"
+    ],
+    "baseUrl": ".",
+    "rootDir": "src",
+    "module": "NodeNext",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "strict": true,
+    "outDir": "out",
+    "sourceMap": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

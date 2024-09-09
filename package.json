@@ -1,0 +1,121 @@
+{
+  "publisher": "ZhongYanZhiShi",
+  "name": "cn2var",
+  "displayName": "CN2Var",
+  "version": "0.1.0",
+  "description": "使用翻译引擎把中文文本转换为代码变量",
+  "repository": "https://github.com/ZhongYanZhiShi/vscode-CN2Var",
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "engines": {
+    "vscode": "^1.92.0"
+  },
+  "activationEvents": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.CN2Var.translator.execute",
+        "title": "翻译并插入变量"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "extension.CN2Var.translator.execute",
+        "key": "alt+f1",
+        "mac": "cmd+f1"
+      }
+    ],
+    "configuration": {
+      "title": "CN2Var",
+      "properties": {
+        "CN2Var.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用CN2Var翻译"
+        },
+        "CN2Var.selectFormat": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "%CN2Var.selectFormat.markdownDescription%"
+        },
+        "CN2Var.format": {
+          "type": "string",
+          "default": "camelCase",
+          "enum": [
+            "camelCase",
+            "PascalCase",
+            "snake_case",
+            "kebab-case"
+          ],
+          "description": "选择变量格式"
+        },
+        "CN2Var.translator.engine": {
+          "type": "string",
+          "default": "有道翻译",
+          "enum": [
+            "有道翻译",
+            "OpenAI"
+          ],
+          "description": "选择翻译引擎"
+        },
+        "CN2Var.translator.model.openai": {
+          "type": "string",
+          "default": "gpt-4o-mini",
+          "enum": [
+            "gpt-4o",
+            "gpt-4o-2024-05-13",
+            "gpt-4o-2024-08-06",
+            "gpt-4o-mini",
+            "gpt-4o-mini-2024-07-18",
+            "gpt-4-turbo",
+            "gpt-4-turbo-2024-04-09",
+            "gpt-4-0125-preview",
+            "gpt-4-turbo-preview",
+            "gpt-4-1106-preview",
+            "gpt-4-vision-preview",
+            "gpt-4",
+            "gpt-4-0314",
+            "gpt-4-0613",
+            "gpt-4-32k",
+            "gpt-4-32k-0314",
+            "gpt-4-32k-0613",
+            "gpt-3.5-turbo",
+            "gpt-3.5-turbo-16k",
+            "gpt-3.5-turbo-0301",
+            "gpt-3.5-turbo-0613",
+            "gpt-3.5-turbo-1106",
+            "gpt-3.5-turbo-0125",
+            "gpt-3.5-turbo-16k-0613"
+          ],
+          "description": "输入OpenAI模型"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "yarn run compile && yarn run lint",
+    "lint": "eslint src --ext ts",
+    "test": "vscode-test"
+  },
+  "dependencies": {
+    "axios": "^1.7.4",
+    "openai": "^4.57.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.26.0",
+    "@types/mocha": "^10.0.7",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.92.0",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^7.11.0",
+    "@vscode/test-cli": "^0.0.9",
+    "@vscode/test-electron": "^2.4.0",
+    "eslint": "^8.57.0",
+    "typescript": "^5.4.5"
+  }
+}
