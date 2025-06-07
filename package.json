@@ -1,7 +1,7 @@
 {
   "publisher": "ZhongYanZhiShi",
   "name": "cn2var",
-  "displayName": "CN2Var",
+  "displayName": "中译码",
   "version": "0.1.0",
   "description": "使用翻译引擎把中文文本转换为代码变量",
   "repository": "https://github.com/ZhongYanZhiShi/vscode-CN2Var",
@@ -28,12 +28,12 @@
       }
     ],
     "configuration": {
-      "title": "CN2Var",
+      "title": "中译码",
       "properties": {
         "CN2Var.enable": {
           "type": "boolean",
           "default": true,
-          "description": "启用CN2Var翻译"
+          "description": "启用中译码翻译"
         },
         "CN2Var.selectFormat": {
           "type": "boolean",
@@ -95,11 +95,11 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "yarn run compile",
+    "vscode:prepublish": "pnpm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "yarn run compile && yarn run lint",
-    "lint": "eslint src --ext ts",
+    "pretest": "pnpm run compile && pnpm run lint",
+    "lint": "eslint src",
     "test": "vscode-test"
   },
   "dependencies": {
@@ -108,6 +108,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.26.0",
+    "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.7",
     "@types/node": "20.x",
     "@types/vscode": "^1.92.0",
@@ -116,6 +117,7 @@
     "@vscode/test-cli": "^0.0.9",
     "@vscode/test-electron": "^2.4.0",
     "eslint": "^8.57.0",
+    "glob": "^11.0.2",
     "typescript": "^5.4.5"
   }
 }

@@ -1,5 +1,3 @@
 {
-  "CN2Var.selectFormat.markdownDescription": {
-    "message": "默认选择`#CN2Var.format#`转换的格式"
-  }
+  "CN2Var.selectFormat.markdownDescription": "默认选择`#CN2Var.format#`转换的格式"
 }

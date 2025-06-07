@@ -4,17 +4,35 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "npm",
-      "script": "watch",
-      "problemMatcher": "$tsc-watch",
-      "isBackground": true,
-      "presentation": {
-        "reveal": "never"
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "label": "TypeScript Build",
+      "type": "shell",
+      "command": "npx",
+      "args": [
+        "tsc",
+        "-p",
+        "."
+      ],
+      "group": "build",
+      "problemMatcher": [
+        "$tsc"
+      ],
+      "isBackground": false
+    },
+    {
+      "label": "watch",
+      "type": "shell",
+      "command": "npx",
+      "args": [
+        "tsc",
+        "-watch",
+        "-p",
+        "."
+      ],
+      "group": "build",
+      "problemMatcher": [
+        "$tsc-watch"
+      ],
+      "isBackground": true
     }
   ]
 }

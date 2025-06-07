@@ -1,6 +1,6 @@
-import type { ErrorMessageKey } from '../message/youdao'
+import type { ErrorMessageKey } from '../messages/youdao'
 
-interface YoudaoResponseSuccess {
+export interface YoudaoResponseSuccess {
   /** 错误返回码 */
   errorCode: '0'
   /** 源语言 */
@@ -19,11 +19,11 @@ interface YoudaoResponseSuccess {
   speakUrl?: string
 }
 
-interface YoudaoResponseError {
+export interface YoudaoResponseError {
   /** 错误返回码 */
   errorCode: ErrorMessageKey
   /** 源语言 */
   l: string
 }
 
-type YoudaoResponse = YoudaoResponseSuccess | YoudaoResponseError
+export type YoudaoResponse = YoudaoResponseSuccess | YoudaoResponseError

@@ -1,96 +1,68 @@
 import * as vscode from 'vscode'
-import { TranslationContext } from './lib/Translator'
-import { translateToNamesCase } from './utils/common'
-import { FormatEnum } from './types/enum'
+import { TranslationManager } from './core/TranslationManager'
+import { ConfigManager } from './core/ConfigManager'
+import { ErrorHandler } from './core/ErrorHandler'
+import { MESSAGES } from './messages'
 
 export function activate(context: vscode.ExtensionContext) {
-  const translationContext = new TranslationContext(context)
+  const configManager = new ConfigManager(context)
+  const errorHandler = new ErrorHandler()
+  const translationManager = new TranslationManager(context, configManager, errorHandler)
 
   // 监控配置文件的变化
   const onConfigChange = vscode.workspace.onDidChangeConfiguration(async (e) => {
-    const translatorEngine = e.affectsConfiguration('CN2Var.translator.engine')
-    if (translatorEngine) {
-      translationContext.setTranslator()
+    if (e.affectsConfiguration('CN2Var.translator.engine')) {
+      await translationManager.reinitializeTranslator()
     }
   })
 
+  // 注册翻译命令
   const disposable = vscode.commands.registerCommand('extension.CN2Var.translator.execute', async () => {
-    const config = vscode.workspace.getConfiguration('CN2Var')
+    try {
+      // 检查插件是否启用
+      if (!configManager.isEnabled()) {
+        vscode.window.showInformationMessage(MESSAGES.PLUGIN_DISABLED)
+        return
+      }
 
-    // 判断是否启用插件
-    const enable = config.get<boolean>('enable')
-    if (!enable) {
-      return
-    }
-
-    // 校验当前翻译器的密钥是否存在
-    if (!await translationContext.validateKeys()) {
-      // 用户配置密钥
-      return await translationContext.reconfigureKeys()
-    }
-
-    const translateText = await vscode.window.showInputBox({
-      title: '中文翻译',
-      placeHolder: '请输入中文内容',
-      prompt: '输入后按回车进行翻译',
-      ignoreFocusOut: true,
-      valueSelection: [0, 0],
-    })
-
-    if (!translateText) {
-      return
-    }
-
-    // 调用翻译Api
-    const result = await translationContext.translate(translateText)
-
-    let returnValue = ''
-    const selectFormat = config.get<boolean>('selectFormat')
-
-    // 根据配置选择翻译结果的格式
-    const _result: string[] = []
-    if (selectFormat) {
-      const format = config.get<FormatEnum>('format')
-      result.forEach((value) => {
-        _result.push(translateToNamesCase(value, format))
-      })
-    } else {
-      Object.values(FormatEnum).forEach((format) => {
-        result.forEach((value) => {
-          _result.push(translateToNamesCase(value, format))
-        })
-      })
-    }
-    // 转换结果替换原有的结果
-    result.splice(0, result.length, ..._result)
-
-    if (result.length > 1) {
-      const resultSet = new Set(result)
-      result.splice(0, result.length, ...resultSet)
-      returnValue = await vscode.window.showQuickPick(result, {
-        title: '翻译结果',
-        placeHolder: '选择翻译结果',
+      // 获取用户输入
+      const translateText = await vscode.window.showInputBox({
+        title: MESSAGES.INPUT_TITLE,
+        placeHolder: MESSAGES.INPUT_PLACEHOLDER,
+        prompt: MESSAGES.INPUT_PROMPT,
         ignoreFocusOut: true,
-      }) || ''
-    } else {
-      returnValue = result[0]
-    }
-
-    if (!returnValue) {
-      return
-    }
-
-    const editor = vscode.window.activeTextEditor
-
-    if (editor) {
-      editor.edit((editBuilder) => {
-        editBuilder.insert(editor.selection.active, returnValue)
+        valueSelection: [0, 0],
       })
+
+      if (!translateText) {
+        return
+      }
+
+      // 执行翻译
+      const result = await translationManager.translateAndFormat(translateText)
+
+      if (!result) {
+        return
+      }
+
+      // 插入翻译结果到编辑器
+      const editor = vscode.window.activeTextEditor
+      if (!editor) {
+        vscode.window.showWarningMessage(MESSAGES.NO_ACTIVE_EDITOR)
+        return
+      }
+
+      await editor.edit((editBuilder) => {
+        editBuilder.insert(editor.selection.active, result)
+      })
+
+      vscode.window.showInformationMessage(MESSAGES.TRANSLATION_SUCCESS)
+    } catch (error) {
+      errorHandler.handleError(error)
     }
   })
 
-  context.subscriptions.push(onConfigChange)
-  context.subscriptions.push(disposable)
+  context.subscriptions.push(onConfigChange, disposable)
 }
 
 export function deactivate() { }

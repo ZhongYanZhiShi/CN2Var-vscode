@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { FormatEnum } from '../types/enum'
+import { FormatEnum } from '../types'
 
 /**
  * 翻译结果转换成驼峰命名
