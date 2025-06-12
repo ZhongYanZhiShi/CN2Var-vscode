@@ -39,8 +39,8 @@ export class TranslationManager {
       this.currentTranslator = TranslatorFactory.createTranslator(engine, this.context)
     } catch (error) {
       this.errorHandler.handleConfigError(error)
-      // 使用默认翻译器（有道翻译）
-      this.currentTranslator = TranslatorFactory.createTranslator(TranslatorEnum.Youdao, this.context)
+      // 使用默认翻译器（Ollama）
+      this.currentTranslator = TranslatorFactory.createTranslator(TranslatorEnum.Ollama, this.context)
     }
   }
 

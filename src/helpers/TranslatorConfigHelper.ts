@@ -23,6 +23,8 @@ export class TranslatorConfigHelper {
         return this.validateYoudaoKeys()
       case TranslatorEnum.OpenAI:
         return this.validateOpenAIKeys()
+      case TranslatorEnum.Ollama:
+        return this.validateOllamaKeys()
       default:
         return false
     }
@@ -37,6 +39,8 @@ export class TranslatorConfigHelper {
         return this.configureYoudaoKeys()
       case TranslatorEnum.OpenAI:
         return this.configureOpenAIKeys()
+      case TranslatorEnum.Ollama:
+        return this.configureOllamaKeys()
       default:
         return false
     }
@@ -56,6 +60,16 @@ export class TranslatorConfigHelper {
   private validateOpenAIKeys(): boolean {
     const config = this.configManager.getOpenAIConfig()
     return !!config.apiKey
+  }
+
+  /**
+   * 验证Ollama配置
+   */
+  private validateOllamaKeys(): boolean {
+    const config = vscode.workspace.getConfiguration('CN2Var')
+    const baseUrl = config.get('translator.ollama.baseUrl')
+    const model = config.get('translator.ollama.model')
+    return !!(baseUrl && model)
   }
 
   /**
@@ -130,12 +144,52 @@ export class TranslatorConfigHelper {
   }
 
   /**
+   * 配置Ollama设置
+   */
+  private async configureOllamaKeys(): Promise<boolean> {
+    try {
+      const baseUrl = await vscode.window.showInputBox({
+        title: 'Ollama配置',
+        placeHolder: 'http://localhost:11434',
+        prompt: '请输入Ollama服务地址',
+        ignoreFocusOut: true,
+      })
+
+      if (!baseUrl) {
+        return false
+      }
+
+      const model = await vscode.window.showInputBox({
+        title: 'Ollama模型',
+        placeHolder: 'qwen2.5:7b',
+        prompt: '请输入Ollama模型名称',
+        ignoreFocusOut: true,
+      })
+
+      if (!model) {
+        return false
+      }
+
+      const config = vscode.workspace.getConfiguration('CN2Var')
+      await config.update('translator.ollama.baseUrl', baseUrl, vscode.ConfigurationTarget.Global)
+      await config.update('translator.ollama.model', model, vscode.ConfigurationTarget.Global)
+
+      this.errorHandler.showInfo('Ollama配置已保存')
+      return true
+    } catch (error) {
+      this.errorHandler.handleError(error, 'Ollama配置')
+      return false
+    }
+  }
+
+  /**
    * 获取翻译器显示名称
    */
   getTranslatorDisplayName(engine: TranslatorEnum): string {
     const names = {
       [TranslatorEnum.Youdao]: '有道翻译',
       [TranslatorEnum.OpenAI]: 'OpenAI',
+      [TranslatorEnum.Ollama]: 'Ollama',
     }
     return names[engine] || engine
   }
@@ -147,6 +201,7 @@ export class TranslatorConfigHelper {
     const descriptions = {
       [TranslatorEnum.Youdao]: '需要配置有道翻译应用ID和密钥',
       [TranslatorEnum.OpenAI]: '需要配置OpenAI API密钥',
+      [TranslatorEnum.Ollama]: '需要配置Ollama服务地址和模型',
     }
     return descriptions[engine] || ''
   }

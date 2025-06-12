@@ -2,6 +2,7 @@ import type * as vscode from 'vscode'
 import { TranslatorEnum } from '../types'
 import { YoudaoTranslator } from '../translators/YoudaoTranslator'
 import { OpenAITranslator } from '../translators/OpenAITranslator'
+import { OllamaTranslator } from '../translators/OllamaTranslator'
 import type { ITranslator } from './BaseTranslator'
 import { ErrorHandler } from './ErrorHandler'
 
@@ -33,6 +34,9 @@ export class TranslatorFactory {
           break
         case TranslatorEnum.OpenAI:
           translator = new OpenAITranslator(context)
+          break
+        case TranslatorEnum.Ollama:
+          translator = new OllamaTranslator(context)
           break
         default: {
           const errorHandler = new ErrorHandler()

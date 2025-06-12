@@ -14,7 +14,7 @@ export const DEFAULT_CONFIG = {
   DEFAULT_FORMAT: FormatEnum.CamelCase,
 
   /** 默认翻译引擎 */
-  DEFAULT_TRANSLATOR: TranslatorEnum.Youdao,
+  DEFAULT_TRANSLATOR: TranslatorEnum.Ollama,
 
   /** 默认OpenAI模型 */
   DEFAULT_OPENAI_MODEL: 'gpt-4o-mini',

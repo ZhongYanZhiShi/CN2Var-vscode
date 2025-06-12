@@ -53,10 +53,11 @@
         },
         "CN2Var.translator.engine": {
           "type": "string",
-          "default": "有道翻译",
+          "default": "Ollama",
           "enum": [
             "有道翻译",
-            "OpenAI"
+            "OpenAI",
+            "Ollama"
           ],
           "description": "选择翻译引擎"
         },
@@ -90,6 +91,16 @@
             "gpt-3.5-turbo-16k-0613"
           ],
           "description": "输入OpenAI模型"
+        },
+        "CN2Var.translator.ollama.baseUrl": {
+          "type": "string",
+          "default": "http://localhost:11434",
+          "description": "Ollama 服务地址"
+        },
+        "CN2Var.translator.ollama.model": {
+          "type": "string",
+          "default": "qwen2.5:7b",
+          "description": "Ollama 模型名称"
         }
       }
     }

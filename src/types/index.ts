@@ -10,6 +10,7 @@ export enum FormatEnum {
 export enum TranslatorEnum {
   Youdao = '有道翻译',
   OpenAI = 'OpenAI',
+  Ollama = 'Ollama',
 }
 
 /** 翻译器配置接口 */
